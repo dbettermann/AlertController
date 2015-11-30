@@ -11,6 +11,7 @@
 @interface AlertController ()
 
 @property (nonatomic, strong) UIWindow *alertWindow;
+@property (nonatomic, strong) UIButton *popoverAnchorButton;
 
 @end
 
@@ -25,6 +26,14 @@
     return _alertWindow;
 }
 
+- (UIButton *)popoverAnchorButton {
+    if (_popoverAnchorButton == nil) {
+        _popoverAnchorButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.alertWindow addSubview:_popoverAnchorButton];
+    }
+    return _popoverAnchorButton;
+}
+
 - (void)show {
     [self show:YES completion:nil];
 }
@@ -34,6 +43,9 @@
 }
 
 - (void)show:(BOOL)animated completion:(void (^)(void))completion {
+    self.popoverPresentationController.sourceView = self.popoverAnchorButton;
+    self.popoverPresentationController.sourceRect = self.popoverAnchorButton.bounds;
+    
     [self.alertWindow makeKeyAndVisible];
     
     [self.alertWindow.rootViewController presentViewController:self animated:animated completion:completion];
